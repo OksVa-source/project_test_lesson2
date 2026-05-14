@@ -6,35 +6,229 @@
   <title>Генератор идей для постов</title>
   <style>
     * { box-sizing: border-box; }
+
+    :root {
+      --bg1: #1e1033;
+      --bg2: #0f1729;
+      --accent: #f472b6;
+      --accent-soft: rgba(244, 114, 182, 0.15);
+      --card: rgba(255, 255, 255, 0.06);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+    }
+
     body {
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      max-width: 36rem;
-      margin: 3rem auto;
-      padding: 0 1.25rem;
-      line-height: 1.5;
-      color: #1a1a1a;
-      background: #fafafa;
-    }
-    h1 {
-      font-size: 1.75rem;
-      font-weight: 600;
-      margin-bottom: 1.25rem;
-    }
-    ul {
       margin: 0;
-      padding-left: 1.25rem;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      line-height: 1.55;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      background: linear-gradient(135deg, var(--bg1) 0%, var(--bg2) 45%, #16213e 100%);
+      background-size: 200% 200%;
+      animation: bg-drift 18s ease-in-out infinite alternate;
     }
+
+    @keyframes bg-drift {
+      0% { background-position: 0% 40%; }
+      100% { background-position: 100% 60%; }
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 20%, rgba(244, 114, 182, 0.12), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 85% 75%, rgba(99, 102, 241, 0.18), transparent 45%);
+      pointer-events: none;
+      animation: glow-pulse 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow-pulse {
+      0% { opacity: 0.7; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.02); }
+    }
+
+    .wrap {
+      position: relative;
+      width: 100%;
+      max-width: 28rem;
+      animation: card-in 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes card-in {
+      from {
+        opacity: 0;
+        transform: translateY(28px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .card {
+      padding: 2rem 1.75rem 1.75rem;
+      border-radius: 1.25rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(12px);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 24px 48px -12px rgba(0, 0, 0, 0.45);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+      opacity: 0;
+      animation: fade-slide 0.6s ease 0.15s both;
+    }
+
+    @keyframes fade-slide {
+      from {
+        opacity: 0;
+        transform: translateX(-8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 0 0 1.5rem;
+      background: linear-gradient(105deg, #fff 0%, #e2e8f0 50%, var(--accent) 120%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      opacity: 0;
+      animation: fade-slide 0.65s ease 0.28s both;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
     li {
-      margin-bottom: 0.5rem;
+      position: relative;
+      padding: 1rem 1rem 1rem 2.75rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      font-size: 0.95rem;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: item-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+      transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        border-color 0.35s ease,
+        background 0.35s ease,
+        box-shadow 0.35s ease;
+    }
+
+    li:nth-child(1) { animation-delay: 0.45s; }
+    li:nth-child(2) { animation-delay: 0.58s; }
+    li:nth-child(3) { animation-delay: 0.71s; }
+
+    @keyframes item-in {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    li::before {
+      content: "";
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+      animation: dot-glow 2.5s ease-in-out infinite;
+    }
+
+    li:nth-child(2)::before { animation-delay: 0.4s; }
+    li:nth-child(3)::before { animation-delay: 0.8s; }
+
+    @keyframes dot-glow {
+      0%, 100% { box-shadow: 0 0 8px var(--accent); opacity: 1; }
+      50% { box-shadow: 0 0 16px var(--accent), 0 0 24px var(--accent-soft); opacity: 0.85; }
+    }
+
+    li:hover {
+      transform: translateX(4px) translateY(-2px);
+      border-color: rgba(244, 114, 182, 0.35);
+      background: var(--accent-soft);
+      box-shadow: 0 8px 24px -8px rgba(244, 114, 182, 0.25);
+    }
+
+    .hint {
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+      opacity: 0;
+      animation: fade-slide 0.6s ease 0.95s both;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body,
+      body::before,
+      li::before {
+        animation: none;
+      }
+      .wrap,
+      .badge,
+      h1,
+      li,
+      .hint {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+      li:hover {
+        transform: none;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Генератор идей для постов</h1>
-  <ul>
-    <li>5 идей постов для экспертов</li>
-    <li>3 идеи сторис на сегодня</li>
-    <li>контент план на неделю</li>
-  </ul>
+  <div class="wrap">
+    <div class="card">
+      <span class="badge">Контент</span>
+      <h1>Генератор идей для постов</h1>
+      <ul>
+        <li>5 идей постов для экспертов</li>
+        <li>3 идеи сторис на сегодня</li>
+        <li>контент план на неделю</li>
+      </ul>
+    </div>
+    <p class="hint">Наведите на пункт — лёгкий акцент</p>
+  </div>
 </body>
 </html>
